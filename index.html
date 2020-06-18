@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <span><strong>INFIX TO POSTFIX</strong></span>
+    </header>
+    <div class="note">
+      <p>
+        note:- please make sure to insert a space after every character of the
+        expression
+      </p>
+      <p>example: A + B - ( c * d )</p>
+    </div>
+    <div class="infix">
+      <form autocomplete="off">
+        <input
+          type="text"
+          placeholder="infix expression"
+          id="expression"
+          name="infix-input"
+        />
+        <br /><br /><button type="button" onclick="handleClick()">
+          Convert
+        </button>
+      </form>
+    </div>
+    <div class="answer hidden" id="answer">
+      <h3>Postfix expression</h3>
+      <h1 id="displayOutput"></h1>
+    </div>
+    <script src="index.js"></script>
+    <a href="output.html">tarace the output</a>
+  </body>
+</html>
