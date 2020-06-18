@@ -51,7 +51,7 @@ body {
   height: 5rem;
   font-weight: 700;
   padding: 1rem 0 3rem 0;
-  margin: 3rem 10rem 0 10rem;
+  margin: 3% 10% 0 10%;
   box-shadow: 0 0 4px black;
   background-color: white;
   border-radius: 7px;
@@ -59,4 +59,22 @@ body {
 
 .hidden {
   display: none;
+}
+.table {
+  margin: 5rem 0 5rem 10%;
+}
+table {
+  font-family: arial, sans-serif;
+  width: 90%;
+  border-collapse: collapse;
+}
+
+td,
+th {
+  border: 1px solid #988585;
+  text-align: left;
+  padding: 8px;
+}
+tr:nth-child(even) {
+  background-color: #ebe5e5;
 }

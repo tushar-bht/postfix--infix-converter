@@ -98,26 +98,35 @@ function handleClosingBracket(char) {
     }
   }
 }
+var table = document.getElementById("table");
+
 function postfix(arr) {
   //main function ..........
-  for (let i = 0; i < arr.length; i++) {
-    var table = document.getElementById("table");
-    var tableRow = document.createElement("tr");
-    var tableData = document.createElement("Td");
+  table.innerHTML = "";
+  var tableHeader1 = document.createElement("th");
+  tableHeader1.innerHTML = "expression";
+  table.appendChild(tableHeader1);
+  var tableHeader2 = document.createElement("th");
+  tableHeader2.innerHTML = "stack";
+  table.appendChild(tableHeader2);
+  var tableHeader3 = document.createElement("th");
+  tableHeader3.innerHTML = "output";
+  table.appendChild(tableHeader3);
 
+  for (let i = 0; i < arr.length; i++) {
+    var row = table.insertRow(i);
+    var cell1 = row.insertCell(0);
+    var cell2 = row.insertCell(1);
+    var cell3 = row.insertCell(2);
     let char = arr[i]; //picking every element of input individually......
-    tableData.innerHTML = char;
-    tableRow.appendChild(tableData);
+    cell1.innerHTML = arr.join(" ");
     if (isOperator(char) === 1) {
       placeOperator(char); //placing the operator in the write position.........
     } else if (char == ")") {
       handleClosingBracket(char);
     } else outputArr.push(char);
-    tableData.innerHTML = operatorStack.join(" ");
-    tableRow.appendChild(tableData);
-    tableData.innerHTML = outputArr.join(" ");
-    tableRow.appendChild(tableData);
-    table.appendChild(tableRow);
+    cell2.innerHTML = operatorStack.join(" ");
+    cell3.innerHTML = outputArr.join(" ");
   }
 }
 function handleClick() {
@@ -136,4 +145,3 @@ function handleClick() {
   outputArr = [];
   operatorStack = [];
 }
-console.log(document.getElementById("het").innerHTML);
