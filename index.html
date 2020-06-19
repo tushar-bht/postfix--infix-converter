@@ -8,7 +8,7 @@
   </head>
   <body>
     <header>
-      <span><strong>INFIX TO POSTFIX</strong></span>
+      <span><strong>INFIX TO PREFIX OR POSTFIX</strong></span>
     </header>
     <div class="note">
       <p>
@@ -25,13 +25,14 @@
           id="expression"
           name="infix-input"
         />
-        <br /><br /><button type="button" onclick="handleClick()">
-          Convert
+        <br /><br /><button type="button" onclick="calculatePrefix()">
+          Prefix
         </button>
+        <button type="button" onclick="calculatePostfix()">Postfix</button>
       </form>
     </div>
     <div class="answer hidden" id="answer">
-      <h3>Postfix expression</h3>
+      <h3 id="outputText">Postfix expression</h3>
       <h1 id="displayOutput"></h1>
     </div>
     <div class="table">

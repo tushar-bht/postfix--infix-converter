@@ -2,6 +2,7 @@ console.log("document is loaded");
 //infix to postfix converter .......
 var operatorStack = []; //for storing operators.......
 var outputArr = []; //for storing output........
+var postfixFlag;
 function isOperator(char) {
   switch (char) {
     case "++":
@@ -64,9 +65,7 @@ function placeOperator(char) {
     return 0;
   }
   var currentOperatorReplacingPower = operatorNo(char);
-  console.log(
-    "currentOperatorReplacingPower is " + currentOperatorReplacingPower
-  );
+
   var stackOperatorReplacingPower = operatorNo(
     operatorStack[operatorStack.length - 1]
   );
@@ -100,17 +99,17 @@ function handleClosingBracket(char) {
 }
 var table = document.getElementById("table");
 
-function postfix(arr) {
+function evaluate(arr) {
   //main function ..........
   table.innerHTML = "";
   var tableHeader1 = document.createElement("th");
-  tableHeader1.innerHTML = "expression";
+  tableHeader1.innerHTML = "Input";
   table.appendChild(tableHeader1);
   var tableHeader2 = document.createElement("th");
-  tableHeader2.innerHTML = "stack";
+  tableHeader2.innerHTML = "Stack";
   table.appendChild(tableHeader2);
   var tableHeader3 = document.createElement("th");
-  tableHeader3.innerHTML = "output";
+  tableHeader3.innerHTML = "Output Stack";
   table.appendChild(tableHeader3);
 
   for (let i = 0; i < arr.length; i++) {
@@ -131,17 +130,41 @@ function postfix(arr) {
 }
 function handleClick() {
   var input = document.getElementById("expression").value;
+  if (input === "") return 0;
   var input = "( " + input + " )";
   var inputArr = input.split(" "); //splitting the input by spaces .......
-
-  postfix(inputArr);
-  console.log("outputArr " + outputArr);
-  console.log("operatorStack " + operatorStack);
+  if (postfixFlag == 1) evaluate(inputArr);
+  else {
+    //for calculating prefix.................
+    inputArr.forEach((value, index) => {
+      if (value === "(") inputArr[index] = ")";
+      else if (value === ")") inputArr[index] = "(";
+    });
+    inputArr = inputArr.reverse();
+    evaluate(inputArr);
+  }
+  if (postfixFlag === 0)
+    //if we are calculating prefix ....
+    outputArr.reverse();
   var answer = outputArr.join(" ");
+
   var output = document.getElementById("displayOutput");
   output.innerHTML = answer;
   document.getElementById("answer").classList.remove("hidden");
 
   outputArr = [];
   operatorStack = [];
+}
+
+function calculatePostfix() {
+  //to calculate Postfix..............
+  postfixFlag = 1;
+  handleClick();
+  document.getElementById("outputText").innerHTML = "Postfix expression";
+}
+function calculatePrefix() {
+  //to calculate Prefix ...............
+  postfixFlag = 0;
+  handleClick();
+  document.getElementById("outputText").innerHTML = "Prefix expression";
 }
