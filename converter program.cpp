@@ -3,6 +3,7 @@
 using namespace std;
 stack<string> operatorStack; //for storing operators
 string outputExpression;   //for storing result of operations
+int operatorStackLength;   //for calculating lenth of operatorStack
 	
          //...................................Prototypes....................................
 void menu();
@@ -71,10 +72,38 @@ break;
 default : cout<<"\n Invalid selection";
 
 }
+	  } 
+	
+ gotoxy(int x, int y)
+{
+  cout<<setw(x);  //horizontal
 
+  for(;y>0;y--)   //vertical
+    cout<<endl;
+ }   
+	  
+//showing elements of operator stack	  
+string displayOperatorStack()
+   { 
+     stack<string> temp;
+	string currentContentsInStack;
+	operatorStackLength=0;
 
-
-	  }    
+	//getting the contents of the stack
+	while(!operatorStack.empty()){
+		temp.push(operatorStack.top());
+		operatorStack.pop();
+		operatorStackLength++;
+	}
+	//putting back contents in operatorStack 
+    while(!temp.empty()){
+    	operatorStack.push(temp.top());
+    	currentContentsInStack+=temp.top()+" ";
+    	temp.pop();
+	}	
+	
+	 return currentContentsInStack;
+}	  
 
 string inputExpression()           //For taking input expression
 {	cout<<"\n";
@@ -118,6 +147,7 @@ void infixToPreOrPost(string calculate)
 	 reverse(expression.begin(),expression.end());
 	 } 
 	 
+	expression="( "+expression+" )"; 
 	
 	istringstream stm(expression) ;
     string character;
@@ -135,17 +165,23 @@ void infixToPreOrPost(string calculate)
     {    // Sepearating by spaces.
 		 string st=expressionVector[i];
 		if(operatorStack.empty())
-		{  
-		operatorStack.push("N"); 
+		{   
         if(isOperator(st))
         operatorStack.push(st);
         else 
         outputExpression+=st+" ";
+        
+        //display of stack table
+        cout<<"   "<<"Input"<<left<<"   "<<right<<setw(100)<<"Stack"<<"     "<<setw(55)<<right<<"Output"<<"\n";
+        cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<displayOperatorStack()<<"                   "<<outputExpression<<endl;
 		}
 		// If the scanned character is an ‘(‘, push it to the stack. 
 		else if(st == "(") 
-        operatorStack.push("(");
-		 
+        {
+		 operatorStack.push("(");
+	    cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<displayOperatorStack()<<"                   "<<outputExpression<<endl;
+		
+	}
         // If the scanned character is an ‘)’, pop the stack and add it to output string  
         // until an ‘(‘ is encountered. 
         else if(st == ")") 
@@ -159,7 +195,9 @@ void infixToPreOrPost(string calculate)
             if(operatorStack.top() == "(") 
             {  
                 operatorStack.pop(); 
-            } 
+            }
+        cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<displayOperatorStack()<<"                   "<<outputExpression<<endl;
+		
         }           
         //If an operator is scanned 
         else if(isOperator(st)){ 
@@ -170,18 +208,18 @@ void infixToPreOrPost(string calculate)
                 outputExpression += c+" "; 
             } 
             operatorStack.push(st); 
+        cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<displayOperatorStack()<<"                   "<<outputExpression<<endl;
+		
         }
-		else 
-		outputExpression+=st+" "; 
-    }
+		else
+		{
+		     outputExpression+=st+" "; 
+        cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<displayOperatorStack()<<"                   "<<outputExpression<<endl;
+		
+	  } 
+		}
     
-    //Pop all the remaining elements from the stack 
-    while(operatorStack.top()!="N") 
-    { 
-        string c = operatorStack.top(); 
-        operatorStack.pop(); 
-        outputExpression += c+" "; 
-    }
+   
 	if(calculate=="prefix")   //again reversing output for prefix expression.
 	reverse(outputExpression.begin(),outputExpression.end()); 
       
