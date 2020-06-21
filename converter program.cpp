@@ -8,7 +8,8 @@ string outputExpression;   //for storing result of operations
 void menu();
 void infixToPreOrPost(string);
 string inputExpression();
-
+bool isOperator(string);
+int operatorPrec(string);
 int main()
 { 
    menu();
