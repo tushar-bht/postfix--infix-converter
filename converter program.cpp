@@ -5,7 +5,7 @@ stack<string> operatorStack; //for storing operators
 stack<string> operandStack;  //for storing operands
 stack<double> evaluationStack; //for evaluation process.
 string outputExpression;   //for storing result of operations
-int operatorStackLength;   //for calculating lenth of operatorStack
+
 	
          //...................................Prototypes....................................
 void menu();
@@ -14,12 +14,13 @@ bool isOperator(string);
 int operatorPrec(string);
 void infixToPreOrPost(string);
 string displayOperandStack();
-
 void preOrPostToInfix(string);
+
 void evaluate();
 void evaluateInfix();
 void evaluatePostfix(string);
 double operation(double,double,string);
+string displayEvaluationStack();
 void evaluatePrefix();
          
          //..............................Main function.................................
@@ -372,6 +373,7 @@ default :{cout<<"\n Invalid selection";
 	    
 	}
 	
+		
  void evaluatePostfix(string type)  //evalutation of postfix expression.
 	{   string expression;
 	    
@@ -397,11 +399,16 @@ default :{cout<<"\n Invalid selection";
              expressionVector.push_back(character);
         }
    	    
+   	    cout<<"\n\n\n  Steps in evaluation - \n\n";
+   	   
+		cout<<"\n"<<"   "<<"Input"<<left<<"   "<<right<<setw(100)<<"Symbol"<<"     "<<setw(50)<<right<<"Stack"<<"\n";  //display table
+        
+
    for(int i=0; i<expressionVector.size(); i++) 
    {
       //read elements and perform postfix evaluation
       string input=expressionVector[i];
-      
+            
       if(isOperator(input))     //input is a operator
 	   {
          double op1 = evaluationStack.top();
@@ -409,14 +416,20 @@ default :{cout<<"\n Invalid selection";
          double op2 = evaluationStack.top();
          evaluationStack.pop();
          evaluationStack.push(operation( op1, op2, input ));   //performing operation on numbers.
-      }
+      
+           cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<input<<"              "<<displayEvaluationStack()<<endl;  //display table
+	 
+	  }
 	  else    //input is a number. 
 	   {
 	   	stringstream toDouble(input);    //converting the string to double.
 	   	double number;
 	   	toDouble>>number;
          evaluationStack.push(number);
-      }
+      
+	    cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<input<<"              "<<displayEvaluationStack()<<endl;  //display table
+	 
+	  }
    }
        //top of evaluationStack contains the result.
        stringstream toString;
@@ -425,9 +438,8 @@ default :{cout<<"\n Invalid selection";
         
 		toString>>outputExpression;   //storing output into outputExpression.
         
-     
-	
 	}
+	
 
     double operation(double a, double b, string op) {
    //Perform operation
@@ -442,19 +454,46 @@ default :{cout<<"\n Invalid selection";
    else if(op == "^")
       return pow(b,a); //find b^a
    else if(op == "%")
-      return b%a;
+      return fmod(b,a);
     else
       return 0;
 }
 	
+ string displayEvaluationStack(){
+
+ 	stack<double> temp;
+	string currentContentsInStack="";
+	
+	//getting the contents of the stack in temp.
+	while(!evaluationStack.empty()){
+		temp.push(evaluationStack.top());
+		evaluationStack.pop();
+		
+	}
+	//putting back contents in operatorStack 
+    while(!temp.empty()){
+    	string instance;
+    	evaluationStack.push(temp.top());
+    	
+    	stringstream toString;   //converting double to string.
+		toString<<temp.top();
+		toString>>instance;
+    	currentContentsInStack+=instance+" ";
+    	
+		temp.pop();
+	}	
+	
+	 return currentContentsInStack;
+ 	
+ }
+
+
 	
  void evaluatePrefix(){
  	system("cls");
  	
  	string expression=inputExpression();
- 	
- //	reverse(expression.begin(),expression.end());   //reversing input expression.
- 	
+ 	 	
  	istringstream stm(expression) ; //splitting characters seperated by spaces into a vector
         string character;
 
@@ -466,6 +505,10 @@ default :{cout<<"\n Invalid selection";
              expressionVector.push_back(character);
         }
    	    
+   	    cout<<"\n\n\n  Steps in evaluation - \n\n";
+   	   
+		cout<<"\n"<<"   "<<"Input"<<left<<"   "<<right<<setw(100)<<"Symbol"<<"     "<<setw(50)<<right<<"Stack"<<"\n";  //display table
+        
    for(int i=expressionVector.size()-1; i>=0 ; i--) 
    {
       //read elements and perform postfix evaluation
@@ -478,21 +521,27 @@ default :{cout<<"\n Invalid selection";
          double op2 = evaluationStack.top();
          evaluationStack.pop();
          evaluationStack.push(operation( op2, op1, input ));   //performing operation on numbers.
+         
+         cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<input<<"              "<<displayEvaluationStack()<<endl;  //display table
+	 
       }
 	  else    //input is a number. 
 	   {
 	   	stringstream toDouble(input);    //converting the string to double.
 	   	double number;
 	   	toDouble>>number;
-         evaluationStack.push(number);
+        evaluationStack.push(number);
+        
+        cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<input<<"              "<<displayEvaluationStack()<<endl;  //display table
+	 
       }
    }
        //top of evaluationStack contains the result.
        stringstream toString;
-    
+        string output;
 	    toString<<evaluationStack.top();   //convering output into string.
         
-		toString>>outputExpression;   //storing output into outputExpression.
+		toString>>outputExpression;   //storing  into outputExpression.
         
  	
  }	
