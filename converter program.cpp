@@ -3,16 +3,26 @@ using namespace std;
 
 stack<string> operatorStack; //for storing operators
 stack<string> operandStack;  //for storing operands
+stack<double> evaluationStack; //for evaluation process.
 string outputExpression;   //for storing result of operations
 int operatorStackLength;   //for calculating lenth of operatorStack
 	
          //...................................Prototypes....................................
 void menu();
-void infixToPreOrPost(string);
-void preOrPostToInfix(string);
 string inputExpression();
 bool isOperator(string);
 int operatorPrec(string);
+void infixToPreOrPost(string);
+string displayOperandStack();
+
+void preOrPostToInfix(string);
+void evaluate();
+void evaluateInfix();
+void evaluatePostfix(string);
+double operation(double,double,string);
+void evaluatePrefix();
+         
+         //..............................Main function.................................
 int main()
 { 
    menu();
@@ -67,13 +77,15 @@ break;
 case 4 :{preOrPostToInfix("prefixToInfix");
 break;
    }
-case 5 :{cout<<"evaluate ";
+case 5 :{evaluate();
 break;
   }
   
 
 
-default : cout<<"\n Invalid selection";
+default :{ cout<<"\n Invalid selection";
+	exit(1);
+  }
 
 }
 	  } 
@@ -103,9 +115,9 @@ string displayOperatorStack()
 
 string inputExpression()           //For taking input expression
 {	cout<<"\n";
-	cout<<"Enter expression : ";
+	cout<<"\n \n Enter expression : ";
 	string expression;
-	std::getline(std::cin >> std::ws, expression);
+	getline(cin >> ws, expression);
 	return expression;
 }
 
@@ -116,7 +128,8 @@ bool isOperator(string input)
      else
     return false; 
 } 
-int operatorPrec(string ch){ 
+int operatorPrec(string ch)   //checking precedence of operator
+{ 
     if(ch == "^") 
     return 3; 
     else if(ch == "*" || ch == "/" || ch =="%") 
@@ -128,7 +141,7 @@ int operatorPrec(string ch){
 
 }
 
-void infixToPreOrPost(string calculate) 
+void infixToPreOrPost(string calculate)     //convering infix to posfix or prefix.
 {    system("cls");
     string expression=inputExpression();
     
@@ -311,14 +324,178 @@ void infixToPreOrPost(string calculate)
 	}
 	
 	
+	                                                                    //Functions for evaluation of expressions.............
+	 
+	
+void evaluate()
+{
+	system("cls");
+	cout<<"\n \n \n ";
+	cout<<"  1 - Evaluate Infix  "<<endl;
+	cout<<"   2 - Evaluate Postfix  "<<endl;
+	cout<<"   3 - Evaluate Prefix  "<<endl;
+	cout<<" \n Enter selection: ";
+	int selection;
+	cin>>selection;
+	cout<<"\n";
+		
+	switch(selection)
+{
+
+case 1 :{ evaluateInfix();          
+break;
+    }
+    
+case 2 :{ evaluatePostfix("postfix");    
+break;
+    }
+    
+case 3 :{ evaluatePrefix();
+break;
+    }
+
+default :{cout<<"\n Invalid selection";
+      exit(1);
+   }         
+}
+
+	}
 	
 	
+ void evaluateInfix()  //evaluation of infix expression.
+	{
+		infixToPreOrPost("postfix");   //converting infix expression to postfix expression.
+		
+		//outputExpression contains the converted posfix form of input.
+		
+		evaluatePostfix("infix");   // evaluating the postfix converted from infix. 
+	    
+	}
+	
+ void evaluatePostfix(string type)  //evalutation of postfix expression.
+	{   string expression;
+	    
+		if(type=="infix")    //infixExpression ->postfix ->evaluate.
+	   {
+		//outputExpression contains the converted posfix form of input.
+		expression=outputExpression;   
+	    cout<<endl<<endl;
+		}
+		else
+		 {
+		  system("cls");
+		  expression=inputExpression();
+	     }
+	     
+		istringstream stm(expression) ; //splitting characters seperated by spaces into a vector
+        string character;
+        //seperating the string with spaces
+        vector<string>expressionVector;  
+    
+	    while( stm >> character )
+        {  // put characters seperated by spaces into vector
+             expressionVector.push_back(character);
+        }
+   	    
+   for(int i=0; i<expressionVector.size(); i++) 
+   {
+      //read elements and perform postfix evaluation
+      string input=expressionVector[i];
+      
+      if(isOperator(input))     //input is a operator
+	   {
+         double op1 = evaluationStack.top();
+         evaluationStack.pop();
+         double op2 = evaluationStack.top();
+         evaluationStack.pop();
+         evaluationStack.push(operation( op1, op2, input ));   //performing operation on numbers.
+      }
+	  else    //input is a number. 
+	   {
+	   	stringstream toDouble(input);    //converting the string to double.
+	   	double number;
+	   	toDouble>>number;
+         evaluationStack.push(number);
+      }
+   }
+       //top of evaluationStack contains the result.
+       stringstream toString;
+    
+	    toString<<evaluationStack.top();   //convering output into string.
+        
+		toString>>outputExpression;   //storing output into outputExpression.
+        
+     
+	
+	}
+
+    double operation(double a, double b, string op) {
+   //Perform operation
+   if(op == "+")
+      return b+a;
+   else if(op == "-")
+      return b-a;
+   else if(op == "*")
+      return b*a;
+   else if(op == "/")
+      return b/a;
+   else if(op == "^")
+      return pow(b,a); //find b^a
+   else if(op == "%")
+      return b%a;
+    else
+      return 0;
+}
 	
 	
-	
-	
-	
-	
+ void evaluatePrefix(){
+ 	system("cls");
+ 	
+ 	string expression=inputExpression();
+ 	
+ //	reverse(expression.begin(),expression.end());   //reversing input expression.
+ 	
+ 	istringstream stm(expression) ; //splitting characters seperated by spaces into a vector
+        string character;
+
+        vector<string>expressionVector;  
+    
+	    while( stm >> character )           //seperating the string with spaces
+	    
+        {  // put characters seperated by spaces into vector
+             expressionVector.push_back(character);
+        }
+   	    
+   for(int i=expressionVector.size()-1; i>=0 ; i--) 
+   {
+      //read elements and perform postfix evaluation
+      string input=expressionVector[i];
+      
+      if(isOperator(input))     //input is a operator
+	   {
+         double op1 = evaluationStack.top();
+         evaluationStack.pop();
+         double op2 = evaluationStack.top();
+         evaluationStack.pop();
+         evaluationStack.push(operation( op2, op1, input ));   //performing operation on numbers.
+      }
+	  else    //input is a number. 
+	   {
+	   	stringstream toDouble(input);    //converting the string to double.
+	   	double number;
+	   	toDouble>>number;
+         evaluationStack.push(number);
+      }
+   }
+       //top of evaluationStack contains the result.
+       stringstream toString;
+    
+	    toString<<evaluationStack.top();   //convering output into string.
+        
+		toString>>outputExpression;   //storing output into outputExpression.
+        
+ 	
+ }	
 	
 	
 	
