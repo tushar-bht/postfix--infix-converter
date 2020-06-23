@@ -146,19 +146,9 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
 {    system("cls");
     string expression=inputExpression();
     
-	 if(calculate=="prefix")  // to calculate prefix
-     {
-     for(int i=0;i<expression.size();i++){
-     	if(expression[i]=='(')
-     	expression[i]=')';
-     	else if(expression[i]==')')
-     	expression[i]='(';
-	 }
-	 reverse(expression.begin(),expression.end());
-	 } 
-	 
-	expression="( "+expression+" )"; 
+    expression="( "+expression+" )"; 
 	
+	 
 	istringstream stm(expression) ;
     string character;
     //seperating the string with spaces
@@ -171,6 +161,17 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
    
     int expressionLength = expressionVector.size(); 
    
+   if(calculate=="prefix")  // to calculate prefix
+     {
+     for(int i=0;i<expressionLength;i++){
+     	if(expressionVector[i]=="(")
+     	expressionVector[i]=")";
+     	else if(expressionVector[i]==")")
+     	expressionVector[i]="(";
+	 }
+	 reverse(expressionVector.begin(),expressionVector.end());
+	 } 
+	 
     for(int i = 0; i < expressionLength; i++) 
     {    // Sepearating by spaces.
 		 string st=expressionVector[i];
@@ -231,12 +232,24 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
 		}
     
    if(calculate=="prefix")   //again reversing output for prefix expression.
-	reverse(outputExpression.begin(),outputExpression.end()); 
-	
+	{
+	istringstream stm(outputExpression) ;  //seperating the string with spaces.
+    
+    string character;
+    string temp;  
+    
+	while( stm >> character )
+  {  // adding characters seperated by spaces int temp.
+  
+     temp=character +" " + temp;  //reversing the string.
+   }
+    outputExpression=temp; //reversed string.
+	} 	
     }
    
+ 
    
-   string displayOperandStack()   //display contents of operand stack
+ string displayOperandStack()   //display contents of operand stack
    {
    	 stack<string> temp;
 	string currentContentsInStack="";
@@ -265,8 +278,6 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
 	system("cls");
 	string expression=inputExpression();
 	
-	if(calculate=="prefixToInfix")  //to convert prefix to infix. 
-	reverse(expression.begin(),expression.end());
 	
 	istringstream stm(expression) ;
     string character;
@@ -276,7 +287,11 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
 	while( stm >> character )
   {  // putting characters seperated by spaces into vector.
      expressionVector.push_back(character);
-   }    
+   }
+   
+   if(calculate=="prefixToInfix")      //to convert prefix to infix. 
+   reverse(expressionVector.begin(),expressionVector.end());
+       
 	 
 	  //display of stack table
         cout<<"\n \n \n";
@@ -307,11 +322,24 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
     } 
   
     // There element left in the stack is the infix expression  
-    outputExpression = operandStack.top();
+      outputExpression = operandStack.top();
     
     if(calculate=="prefixToInfix")  //reverse outputExpression in case of prefixToInfix.
-     {reverse(outputExpression.begin(),outputExpression.end());
-	  
+     {
+	
+    istringstream stm(outputExpression) ;  //seperating the string with spaces.
+    
+    string character;
+    string temp;  
+    
+      while( stm >> character )
+      {  // adding characters seperated by spaces int temp.
+  
+      temp=character +" " + temp;  //reversing the string.
+      }
+      outputExpression=temp; //reversed string.
+	   	
+   
 	  for(int i=0;i<outputExpression.size();i++)  //converting '(' to ')' and ')' to '('
   	  {
 	  	if(outputExpression[i]=='(')
