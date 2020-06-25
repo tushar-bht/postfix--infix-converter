@@ -311,14 +311,18 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
 	 return currentContentsInStack;
 
    } 
- void handleUnaryOperator(string unary){
+   
+ void handleUnaryOperator(string unaryOperator,string calculate){
    	    string op1 = operandStack.top(); 
-        operandStack.pop();  
-        operandStack.push("( " + unary + " " + op1 + " )"); 
+        operandStack.pop();
+		if(calculate=="prefixToInfix")  //reverse push order.
+        operandStack.push("( " + op1 + " " + unaryOperator + " )"); 
+        else
+       operandStack.push("( " + unaryOperator + " " + op1 + " )"); 
+        
    }
     
-    
-	
+   	
 	void preOrPostToInfix(string calculate)  //prefix or postfix to infix convert.
 	{
 	system("cls");
@@ -348,9 +352,11 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
     {   string st=expressionVector[i];
         // handle operators. 
         if (isOperator(st)) 
-        {  if(st=="++" || st=="--" || st=="~" || st=="!")
-              handleUnaryOperator(st);
-            else{
+        {  
+		   if(st=="++" || st=="--" || st=="~" || st=="!")
+              handleUnaryOperator(st,calculate);
+            
+		   else{
             string op1 = operandStack.top(); 
             operandStack.pop(); 
             string op2 = operandStack.top(); 
@@ -358,8 +364,7 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
             operandStack.push("( " + op2 + " " + st + " " + op1 + " )"); 
          
 			} 
-            
-            
+             
         cout<<" "<<setw(100)<<left<<expression<<"     "<<displayOperandStack()<<endl;
         } 
         // push operands
