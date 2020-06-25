@@ -14,6 +14,7 @@ bool isOperator(string);
 int operatorPrec(string);
 void infixToPreOrPost(string);
 string displayOperandStack();
+void handleUnaryOperator(string);
 void preOrPostToInfix(string);
 
 void evaluate();
@@ -26,11 +27,37 @@ void evaluatePrefix();
          //..............................Main function.................................
 int main()
 { 
-   menu();
+   int choice=1;
+    while(choice==1)
+	{
+    menu();
+    //display output
+    cout<<endl<<endl<<"  Output : "<<outputExpression;  
+  	
+  	
+  	cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n";
+  	cout<<" Enter 1 - to continue , 0 - to exit : ";
+  	cin>>choice;
+  	
+  	system("cls");
+  	
+  	// Empty all stacks.
+  	while(!operatorStack.empty()){
+  		operatorStack.pop();
+	  }
+	
+	while(!operandStack.empty()){
+		operandStack.pop();
+	  }
+	
+	while(!evaluationStack.empty()){
+		evaluationStack.pop();
+	  }
+	
+	outputExpression="";  
+	    
+	}
   
-   //display output
-   cout<<endl<<endl<<"  Output : "<<outputExpression;  
-
 return 0;
 
 }
@@ -53,7 +80,7 @@ cout<<"\n 4 - Prefix to Infix";
 
 cout<<"\n 5 - Evaluate";
 
-cout<<"\n Enter selection: ";
+cout<<"\n \n  Enter selection: ";
 
 // read the input
 
@@ -124,18 +151,32 @@ string inputExpression()           //For taking input expression
 
 bool isOperator(string input) 
 { 
-    if(input== "+"||input=="-" ||input=="*" ||input=="%"||input=="/"||input=="(" ||input=="^")
+    if(input== "++"||input=="--" ||input=="~" ||input=="!" ||input=="^"||input=="*" ||input=="%" ||input=="/" || input=="+" || input=="-" ||input=="(" ||input== "<<" ||input==">>" || input==">" || input=="<" || input=="<=" ||input==">=" ||input=="==" ||input== "!=" ||input=="&&" ||input=="||" ||input=="?:" ||input=="=")
     return true; 
      else
     return false; 
 } 
 int operatorPrec(string ch)   //checking precedence of operator
 { 
-    if(ch == "^") 
-    return 3; 
+    if(ch == "++" || ch=="--" || ch=="~" || ch=="!" || ch=="^") 
+    return 10; 
     else if(ch == "*" || ch == "/" || ch =="%") 
-    return 2; 
+    return 9; 
     else if(ch == "+" || ch == "-") 
+    return 8;
+	else if(ch == "<<" || ch == ">>" ) 
+    return 7; 
+    else if(ch == "<=" || ch == ">=" || ch== ">" || ch== "<") 
+    return 6; 
+    else if(ch == "==" || ch == "!=" ) 
+    return 5; 
+    else if(ch == "&&" ) 
+    return 4; 
+    else if(ch == "||" ) 
+    return 3; 
+    else if(ch == "?:" ) 
+    return 2; 
+    else if(ch == "=" || ch == "+=" || ch == "-=" || ch== "*=" || ch== "/=" || ch== "*=" || ch== "%=") 
     return 1; 
     else
     return -1; 
@@ -270,6 +311,11 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
 	 return currentContentsInStack;
 
    } 
+ void handleUnaryOperator(string unary){
+   	    string op1 = operandStack.top(); 
+        operandStack.pop();  
+        operandStack.push("( " + unary + " " + op1 + " )"); 
+   }
     
     
 	
@@ -302,13 +348,17 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
     {   string st=expressionVector[i];
         // handle operators. 
         if (isOperator(st)) 
-        { 
+        {  if(st=="++" || st=="--" || st=="~" || st=="!")
+              handleUnaryOperator(st);
+            else{
             string op1 = operandStack.top(); 
             operandStack.pop(); 
             string op2 = operandStack.top(); 
             operandStack.pop(); 
             operandStack.push("( " + op2 + " " + st + " " + op1 + " )"); 
          
+			} 
+            
             
         cout<<" "<<setw(100)<<left<<expression<<"     "<<displayOperandStack()<<endl;
         } 
@@ -429,7 +479,7 @@ default :{cout<<"\n Invalid selection";
    	    
    	    cout<<"\n\n\n  Steps in evaluation - \n\n";
    	   
-		cout<<"\n"<<"   "<<"Input"<<left<<"   "<<right<<setw(100)<<"Symbol"<<"     "<<setw(50)<<right<<"Stack"<<"\n";  //display table
+		cout<<"\n"<<"   "<<"Input"<<left<<"    "<<right<<setw(100)<<"Symbol"<<"   "<<setw(50)<<right<<"Stack"<<"\n";  //display table
         
 
    for(int i=0; i<expressionVector.size(); i++) 

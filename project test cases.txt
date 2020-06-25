@@ -1,0 +1,20 @@
+infix to postfix
+
+a/b^c-d
+a+b*(c^d-e)^(f+g*h)-i
+( ( 99 / 43.543 ) - 23.543 % 2 ^ 2 )
+ 
+infix to prefix
+
+( ( H * ( ( ( ( A + ( ( B + C ) * D ) ) * F ) * G ) * E ) ) + J )
+
+ ( AX * ( BX * ( ( ( CY + AY ) + BY ) * CX ) ) )
+
+postfix to infix
+
+ AX B CY * + D E ­ /
+ H A B C + D * + F * G * E * * J +
+
+prefix to infix
+- - - A B * C - + D / E F G H   --output -A - B - C * (D + E / F - G) - H
+
