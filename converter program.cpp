@@ -493,7 +493,14 @@ default :{cout<<"\n Invalid selection";
       string input=expressionVector[i];
             
       if(isOperator(input))     //input is a operator
-	   {
+	   { 
+	   if(input=="++" || input=="--" || input=="~" || input=="!")  //neglecting unary operators.
+          {
+          	system("cls");
+          	cout<<endl<<"   Cannot handle unary operators ";
+          	exit(1);
+		  }
+         
          double op1 = evaluationStack.top();
          evaluationStack.pop();
          double op2 = evaluationStack.top();
@@ -598,7 +605,13 @@ default :{cout<<"\n Invalid selection";
       string input=expressionVector[i];
       
       if(isOperator(input))     //input is a operator
-	   {
+	   {  if(input=="++" || input=="--" || input=="~" || input=="!") //neglecting unary operators.
+          {
+          	system("cls");
+          	
+          	cout<<endl<<endl<<"   Cannot handle unary operators ";
+          	exit(1);
+		  }
          double op1 = evaluationStack.top();
          evaluationStack.pop();
          double op2 = evaluationStack.top();

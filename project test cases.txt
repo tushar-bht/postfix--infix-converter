@@ -17,4 +17,5 @@ postfix to infix
 
 prefix to infix
 - - - A B * C - + D / E F G H   --output -A - B - C * (D + E / F - G) - H
+|| ! && A ! || < B C > C D < C E --output  ! (A && ! ((B < C) || (C > D))) || (C < E)
 
