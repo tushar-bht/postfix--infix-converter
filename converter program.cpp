@@ -38,7 +38,7 @@ int main()
   	cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n";
   	cout<<" Enter 1 - to continue , 0 - to exit : ";
   	cin>>choice;
-  	
+  	cout<<"\n\n\n\n\n\n\n\n\n\n\n\n\n";
   	system("cls");
   	
   	// Empty all stacks.
@@ -69,7 +69,8 @@ int selection;
 cout<<"\n Menu";
 
 cout<<"\n========";
-
+cout<<"\n";
+	 
 cout<<"\n 1 - Infix to Postfix";
 
 cout<<"\n 2 - Infix to Prefix";
@@ -228,15 +229,15 @@ void infixToPreOrPost(string calculate)     //convering infix to posfix or prefi
         cout<<"\n"<<"   "<<"Input"<<left<<"   "<<right<<setw(100)<<"Stack"<<"     "<<setw(50)<<right<<"Output"<<"\n";
         cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<displayOperatorStack()<<"              "<<outputExpression<<endl;
 		}
-		// If the scanned character is an ‘(‘, push it to the stack. 
+		// If the scanned character is an â€˜(â€˜, push it to the stack. 
 		else if(st == "(") 
         {
 		 operatorStack.push("(");
 	    cout<<" "<<setw(100)<<left<<expression<<"     "<<left<<setw(40)<<displayOperatorStack()<<"              "<<outputExpression<<endl;
 		
 	}
-        // If the scanned character is an ‘)’, pop the stack and add it to output string  
-        // until an ‘(‘ is encountered. 
+        // If the scanned character is an â€˜)â€™, pop the stack and add it to output string  
+        // until an â€˜(â€˜ is encountered. 
         else if(st == ")") 
         { 
             while(!operatorStack.empty() && operatorStack.top() != "(") 
